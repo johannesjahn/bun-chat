@@ -1,8 +1,6 @@
 import { authService } from "../services/authService";
 import { userService } from "../services/userService";
 
-const a = 123;
-
 export class UserController {
   // Simple in-memory session store: token -> username
   private sessions = new Map<string, string>();

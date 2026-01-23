@@ -1,6 +1,5 @@
 import { userController } from "./controllers/userController";
 
-const x = 4444444444444444444;
 const server = Bun.serve({
   port: 3000,
   async fetch(req) {
