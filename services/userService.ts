@@ -24,8 +24,6 @@ export class UserService {
     return result;
   }
 
-
-
   async getAllUsers() {
     return await this.db.query.users.findMany();
   }

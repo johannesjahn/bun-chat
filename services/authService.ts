@@ -22,18 +22,18 @@ export class AuthService {
 
     // Create user
     const newUser = await this.userService.createUser({
-        username,
-        name,
+      username,
+      name,
     });
 
     if (!newUser) {
-        throw new Error("Failed to create user");
+      throw new Error("Failed to create user");
     }
 
     // Store password
     await this.db.insert(passwords).values({
-        userId: newUser.id,
-        hash: passwordHash
+      userId: newUser.id,
+      hash: passwordHash,
     });
 
     return newUser;
@@ -42,20 +42,23 @@ export class AuthService {
   async login(username: string, passwordPlain: string) {
     const user = await this.userService.getUserByUsername(username);
     if (!user) {
-        return null;
+      return null;
     }
 
     const passwordEntry = await this.db.query.passwords.findFirst({
-        where: eq(passwords.userId, user.id)
+      where: eq(passwords.userId, user.id),
     });
 
     if (!passwordEntry) {
-        return null; 
+      return null;
     }
 
-    const isMatch = await Bun.password.verify(passwordPlain, passwordEntry.hash);
+    const isMatch = await Bun.password.verify(
+      passwordPlain,
+      passwordEntry.hash
+    );
     if (!isMatch) {
-         return null;
+      return null;
     }
 
     return user;

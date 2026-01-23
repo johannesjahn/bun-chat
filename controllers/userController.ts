@@ -5,40 +5,15 @@ export class UserController {
   // Simple in-memory session store: token -> username
   private sessions = new Map<string, string>();
 
-  async handle(req: Request): Promise<Response> {
-    const url = new URL(req.url);
-
-    // CORS headers
-    if (req.method === "OPTIONS") {
-      return new Response(null, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        },
-      });
-    }
-
-    if (req.method === "POST" && url.pathname === "/user/register") {
-      return this.register(req);
-    }
-
-    if (req.method === "POST" && url.pathname === "/user/login") {
-      return this.login(req);
-    }
-
-    if (req.method === "GET" && url.pathname === "/user/list") {
-      return this.getUsers(req);
-    }
-
-    return new Response("Not Found", { status: 404 });
-  }
-
   async register(req: Request): Promise<Response> {
     try {
-      const body = await req.json() as { username?: string; password?: string; name?: string };
+      const body = (await req.json()) as {
+        username?: string;
+        password?: string;
+        name?: string;
+      };
       const { username, password, name } = body;
-      
+
       if (!username || !password || !name) {
         return new Response("Missing required fields", { status: 400 });
       }
@@ -54,7 +29,10 @@ export class UserController {
 
   async login(req: Request): Promise<Response> {
     try {
-      const body = await req.json() as { username?: string; password?: string };
+      const body = (await req.json()) as {
+        username?: string;
+        password?: string;
+      };
       const { username, password } = body;
 
       if (!username || !password) {
@@ -74,7 +52,7 @@ export class UserController {
         headers: { "Content-Type": "application/json" },
       });
     } catch (error) {
-        console.error(error);
+      console.error(error);
       return new Response((error as Error).message, { status: 500 });
     }
   }

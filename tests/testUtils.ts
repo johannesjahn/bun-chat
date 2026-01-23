@@ -51,7 +51,10 @@ import { AuthService } from "../services/authService";
 
 export const testWithAuthService = (
   name: string,
-  fn: (args: { authService: AuthService; userService: UserService }) => Promise<void>
+  fn: (args: {
+    authService: AuthService;
+    userService: UserService;
+  }) => Promise<void>
 ) => {
   test(name, async () => {
     const { db, sqlite, testDbFile } = await setupTestDb();

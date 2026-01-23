@@ -6,7 +6,7 @@ const server = Bun.serve({
     const url = new URL(req.url);
 
     if (url.pathname.startsWith("/user")) {
-        return userController.handle(req);
+      return userController.handle(req);
     }
 
     return new Response("Not Found", { status: 404 });
