@@ -1,20 +1,16 @@
-import { userService } from "./services/userService";
+import { userController } from "./controllers/userController";
 
-async function main() {
-  console.log("Creating a new user...");
-  try {
-    const newUser = await userService.createUser({
-      name: "Alice",
-      email: `alice_${Date.now()}@example.com`,
-    });
-    console.log("User created:", newUser);
+const server = Bun.serve({
+  port: 3000,
+  async fetch(req) {
+    const url = new URL(req.url);
 
-    console.log("Fetching all users...");
-    const allUsers = await userService.getAllUsers();
-    console.log("All users:", allUsers);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
+    if (url.pathname.startsWith("/user")) {
+        return userController.handle(req);
+    }
 
-main();
+    return new Response("Not Found", { status: 404 });
+  },
+});
+
+console.log(`Listening on http://localhost:${server.port} ...`);

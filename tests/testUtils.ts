@@ -46,3 +46,21 @@ export const testWithService = (
     }
   });
 };
+
+import { AuthService } from "../services/authService";
+
+export const testWithAuthService = (
+  name: string,
+  fn: (args: { authService: AuthService; userService: UserService }) => Promise<void>
+) => {
+  test(name, async () => {
+    const { db, sqlite, testDbFile } = await setupTestDb();
+    const userService = new UserService(db as any);
+    const authService = new AuthService(db as any);
+    try {
+      await fn({ authService, userService });
+    } finally {
+      await teardownTestDb(sqlite, testDbFile);
+    }
+  });
+};

@@ -10,6 +10,13 @@ export class UserService {
     return result[0];
   }
 
+  async getUserByUsername(username: string) {
+    const result = await this.db.query.users.findFirst({
+      where: eq(users.username, username),
+    });
+    return result;
+  }
+
   async getUserById(id: number) {
     const result = await this.db.query.users.findFirst({
       where: eq(users.id, id),
@@ -17,12 +24,7 @@ export class UserService {
     return result;
   }
 
-  async getUserByEmail(email: string) {
-    const result = await this.db.query.users.findFirst({
-      where: eq(users.email, email),
-    });
-    return result;
-  }
+
 
   async getAllUsers() {
     return await this.db.query.users.findMany();

@@ -4,8 +4,8 @@ import { testWithService } from "./testUtils";
 describe("UserService", () => {
   testWithService("should create a user", async ({ userService }) => {
     const newUser = {
+      username: "testuser",
       name: "Test User",
-      email: "test@example.com",
     };
 
     const createdUser = await userService.createUser(newUser);
@@ -16,7 +16,6 @@ describe("UserService", () => {
 
     expect(createdUser.id).toBeDefined();
     expect(createdUser.name).toBe(newUser.name);
-    expect(createdUser.email).toBe(newUser.email);
     expect(createdUser.createdAt).toBeInstanceOf(Date);
   });
 
@@ -29,8 +28,8 @@ describe("UserService", () => {
     "get all users should return all users",
     async ({ userService }) => {
       const newUser = {
+        username: "testuser2",
         name: "Test User",
-        email: "test@example.com",
       };
 
       await userService.createUser(newUser);
