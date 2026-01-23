@@ -1,0 +1,7 @@
+services:
+  backend:
+    build: .
+    volumes:
+      - ./sqlite.db:/usr/src/app/sqlite.db
+    ports:
+      - "3000:3000"
