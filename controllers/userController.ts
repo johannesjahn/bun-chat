@@ -14,9 +14,6 @@ const loginSchema = z.object({
 });
 
 export class UserController {
-  // Simple in-memory session store: token -> username
-  private sessions = new Map<string, string>();
-
   async handle(req: Request): Promise<Response> {
     const url = new URL(req.url);
 
@@ -70,16 +67,12 @@ export class UserController {
       }
       const { username, password } = parseResult.data;
 
-      const user = await authService.login(username, password);
-      if (!user) {
+      const token = await authService.login(username, password);
+      if (!token) {
         return new Response("Invalid credentials", { status: 401 });
       }
 
-      // Generate a simple session token
-      const token = crypto.randomUUID();
-      this.sessions.set(token, user.username);
-
-      return new Response(JSON.stringify({ token, user }), {
+      return new Response(JSON.stringify({ token }), {
         headers: { "Content-Type": "application/json" },
       });
     } catch (error) {
@@ -92,7 +85,12 @@ export class UserController {
     const authHeader = req.headers.get("Authorization");
     const token = authHeader?.replace("Bearer ", "");
 
-    if (!token || !this.sessions.has(token)) {
+    if (!token) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const payload = await authService.verifyToken(token);
+    if (!payload) {
       return new Response("Unauthorized", { status: 401 });
     }
 

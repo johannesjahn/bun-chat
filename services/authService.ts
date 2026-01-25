@@ -1,10 +1,14 @@
 import { eq } from "drizzle-orm";
+import { SignJWT, jwtVerify } from "jose";
 import { db as defaultDb, type DB } from "../db";
 import { users, passwords } from "../db/schema";
 import { UserService } from "./userService";
 
 export class AuthService {
   private userService: UserService;
+  private readonly JWT_SECRET = new TextEncoder().encode(
+    process.env.JWT_SECRET || "default_fallback_secret"
+  );
 
   constructor(private db: DB = defaultDb) {
     this.userService = new UserService(db);
@@ -61,7 +65,27 @@ export class AuthService {
       return null;
     }
 
-    return user;
+    // Generate JWT
+    const token = await new SignJWT({
+      username: user.username,
+      name: user.name,
+      id: user.id,
+    })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("24h")
+      .sign(this.JWT_SECRET);
+
+    return token;
+  }
+
+  async verifyToken(token: string) {
+    try {
+      const { payload } = await jwtVerify(token, this.JWT_SECRET);
+      return payload;
+    } catch (error) {
+      return null;
+    }
   }
 }
 

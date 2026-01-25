@@ -35,9 +35,11 @@ describe("AuthService", () => {
   testWithAuthService("should login successfully", async ({ authService }) => {
     await authService.register("user1", "password123", "User");
 
-    const user = await authService.login("user1", "password123");
-    expect(user).toBeDefined();
-    expect(user?.username).toBe("user1");
+    const token = await authService.login("user1", "password123");
+    expect(token).toBeString();
+
+    const payload = await authService.verifyToken(token!);
+    expect(payload?.username).toBe("user1");
   });
 
   testWithAuthService(
