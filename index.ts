@@ -1,4 +1,5 @@
 import { userController } from "./controllers/userController";
+import { chatController } from "./controllers/chatController";
 
 const server = Bun.serve({
   port: 3000,
@@ -7,6 +8,10 @@ const server = Bun.serve({
 
     if (url.pathname.startsWith("/user")) {
       return userController.handle(req);
+    }
+
+    if (url.pathname.startsWith("/chats")) {
+      return chatController.handle(req);
     }
 
     return new Response("Not Found", { status: 404 });
