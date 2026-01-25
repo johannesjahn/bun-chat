@@ -4,7 +4,7 @@ import { authService } from "../services/authService";
 import { userService } from "../services/userService";
 
 const createChatSchema = z.object({
-  name: z.string().min(1).max(100),
+  name: z.string().min(1).max(100).optional(),
   users: z.array(z.string()).min(1).max(100), // Adjusted validation slightly
 });
 
@@ -74,13 +74,7 @@ export class ChatController {
         userIds.push(user.id);
       }
 
-      if (userIds.length < 2) {
-        // Maybe just warn? Or allow "chat with self"? The schema validation expects min 2 in previous file, but I changed it locally to min 1 to be safe, but conceptually chats are users > 1.
-        // Original file had min(2). I'll respect logic.
-        // If creator adds 1 person, it's 2 people.
-      }
-
-      const chat = await chatService.createChat(name, userIds);
+      const chat = await chatService.createChat(userIds, name);
 
       return new Response(JSON.stringify(chat), {
         headers: { "Content-Type": "application/json" },

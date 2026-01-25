@@ -30,7 +30,7 @@ export type NewPassword = typeof passwords.$inferInsert;
 
 export const chats = sqliteTable("chats", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  name: text("name").notNull(),
+  name: text("name"),
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
     () => new Date()
   ),
