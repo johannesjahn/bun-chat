@@ -64,7 +64,7 @@ SEND_MSG_RESPONSE=$(curl -s -X POST $URL/chats/message \
 echo "Response: $SEND_MSG_RESPONSE"
 echo ""
 
-echo "--- 6. Sending Message ---"
+echo "--- 7. Sending Message ---"
 SEND_MSG_RESPONSE=$(curl -s -X POST $URL/chats/message \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
@@ -72,7 +72,7 @@ SEND_MSG_RESPONSE=$(curl -s -X POST $URL/chats/message \
 echo "Response: $SEND_MSG_RESPONSE"
 echo ""
 
-echo "--- 7. Getting Messages ---"
+echo "--- 8. Getting Messages ---"
 GET_MSGS_RESPONSE=$(curl -s -X GET "$URL/chats/messages?chatId=$CHAT_ID" \
   -H "Authorization: Bearer $TOKEN")
 echo "Response: $GET_MSGS_RESPONSE"
